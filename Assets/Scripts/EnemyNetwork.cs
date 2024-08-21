@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class EnemyNetwork : NetworkBehaviour
 {
 
     [SerializeField] public NetworkVariable<float> moveSpeed;
-    [field: SerializeField] private static int maxHealthValue = 5;
+    [field: SerializeField] private static int maxHealthValue = 1;
     [SerializeField] private static NetworkVariable<int> maxHealth = new NetworkVariable<int>(maxHealthValue, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(maxHealth.Value, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
     private float distanceToPlayerOne;
@@ -23,16 +20,31 @@ public class EnemyNetwork : NetworkBehaviour
         rigidBody = GetComponent<Rigidbody>();
     }
 
+    private void Start()
+    {
+        FindPlayerIDs();
+    }
+
     private void Update()
     {
         if(currentHealth.Value <= 0) 
         {
+            this.GetComponent<NetworkObject>().Despawn();
             Destroy(this.gameObject);
         }
     }
 
+    private void FindPlayerIDs() 
+    {
+        
+    }
+
     private void FixedUpdate() 
     {
+        //do the current target
+        Vector3 targetPos = currentTarget.transform.position - transform.position;
+        targetPos.Normalize();
+        rigidBody.velocity = targetPos * transform.forward.z * moveSpeed.Value;
 
     }
 
@@ -52,16 +64,17 @@ public class EnemyNetwork : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void OnTakeDamageEvent_ClientRpc() 
+    [ServerRpc]
+    public void OnTakeDamageEvent_ServerRpc() 
     {
 
+        currentHealth.Value--;
         Debug.Log("HealthDecremented.");
-        currentHealth.Value--;   
     }
 
-    public void Destroy(NetworkObject networkObject) 
+    [ServerRpc]
+    public void Disable_ServerRpc() 
     {
-
+        base.OnNetworkDespawn();
     }
 }

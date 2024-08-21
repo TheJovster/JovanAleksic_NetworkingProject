@@ -140,8 +140,4 @@ public class PlayerNetwork : NetworkBehaviour
     {
         base.OnNetworkDespawn();
     }
-
-    public void Destroy(NetworkObject networkObject)
-    {
-    }
 }
