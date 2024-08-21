@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class EnemyNetwork : NetworkBehaviour
 {
-    [SerializeField] public NetworkVariable<float> currentHealth;
+
     [SerializeField] public NetworkVariable<float> moveSpeed;
-    [SerializeField] public float maxHealth = 10.0f;
+    [field: SerializeField] private static int maxHealthValue = 5;
+    [SerializeField] private static NetworkVariable<int> maxHealth = new NetworkVariable<int>(maxHealthValue, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
+    [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(maxHealth.Value, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
     private float distanceToPlayerOne;
     private float distanceToPlayerTwo;
     private PlayerNetwork currentTarget;
@@ -17,13 +19,16 @@ public class EnemyNetwork : NetworkBehaviour
 
     private void Awake()
     {
-        currentHealth.Value = maxHealth;
+        currentHealth.Value = maxHealth.Value;
         rigidBody = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
-        
+        if(currentHealth.Value <= 0) 
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     private void FixedUpdate() 
@@ -45,6 +50,14 @@ public class EnemyNetwork : NetworkBehaviour
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this);
         }
+    }
+
+    [ClientRpc]
+    public void OnTakeDamageEvent_ClientRpc() 
+    {
+
+        Debug.Log("HealthDecremented.");
+        currentHealth.Value--;   
     }
 
     public void Destroy(NetworkObject networkObject) 

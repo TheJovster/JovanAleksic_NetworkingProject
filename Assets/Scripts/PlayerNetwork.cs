@@ -19,8 +19,6 @@ public class PlayerNetwork : NetworkBehaviour
     private Vector2 moveInput;
     private Vector2 mousePos;
 
-    private NetworkVariable<ulong> networkID;
-
     /// <summary>
     /// network variables go here. They are replicated and constant between the server/host and clients
     /// </summary>
@@ -31,7 +29,6 @@ public class PlayerNetwork : NetworkBehaviour
 
     private void Awake()
     {
-        networkID.Value = this.NetworkObjectId;
         rigidBody = GetComponent<Rigidbody>();
         if (input == null)
         {

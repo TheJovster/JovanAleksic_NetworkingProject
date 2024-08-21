@@ -31,13 +31,10 @@ public class NetworkProjectile : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject != this.gameObject && collision.gameObject.tag != "Player") 
+        if(collision.gameObject != this.gameObject && collision.gameObject.tag == "Enemy") 
         {
-            Destroy(this.gameObject);
-        }
-        else if(collision.gameObject != this.gameObject && collision.gameObject.tag == "Enemy") 
-        {
-            collision.gameObject.GetComponent<PlayerNetwork>().OnTakeDamageEvent_ClientRpc();
+            Debug.Log("Collided with" + collision.gameObject.tag);
+            collision.gameObject.GetComponent<EnemyNetwork>().OnTakeDamageEvent_ClientRpc();
             Destroy(this.gameObject);
         }
     }
