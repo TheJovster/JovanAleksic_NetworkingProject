@@ -28,12 +28,17 @@ public class EnemyNetwork : NetworkBehaviour
 
     }
 
-    
+    public override void OnNetworkSpawn()
+    {
+        EnemyManager.Instance.enemiesList.Add(this);
+        base.OnNetworkSpawn();
+    }
 
     private void Update()
     {
         if(currentHealth.Value <= 0) 
         {
+            EnemyManager.Instance.enemiesList.Remove(this);
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this.gameObject);
         }

@@ -8,7 +8,7 @@ public class EnemyManager : NetworkBehaviour
     public static EnemyManager Instance;
 
     public List<Transform> players = new List<Transform>();
-    public List<NetworkObject> enemiesList = new List<NetworkObject>();
+    public List<EnemyNetwork> enemiesList = new List<EnemyNetwork>();
     [SerializeField] private NetworkObject enemyPrefab;
     [SerializeField] private Transform[] spawnPoints;
     
@@ -22,7 +22,14 @@ public class EnemyManager : NetworkBehaviour
 
     private void Start()
     {
-        EnemyManager.Instance.SpawnEnemies_ServerRpc();
+        EnemieSpawnQueue_ServerRpc();
+    }
+
+    [ServerRpc]
+    private void EnemieSpawnQueue_ServerRpc()
+    {
+        for (int i = 0; i < 5; i++)
+            SpawnEnemies_ServerRpc();
     }
 
     [ServerRpc]
