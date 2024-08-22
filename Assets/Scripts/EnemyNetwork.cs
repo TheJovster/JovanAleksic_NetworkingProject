@@ -5,7 +5,7 @@ public class EnemyNetwork : NetworkBehaviour
 {
 
     [SerializeField] public NetworkVariable<float> moveSpeed;
-    [field: SerializeField] private static int maxHealthValue;
+    private static int maxHealthValue;
     [SerializeField] private static NetworkVariable<int> maxHealth = new NetworkVariable<int>(maxHealthValue, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(maxHealth.Value, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
 
