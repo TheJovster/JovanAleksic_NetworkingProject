@@ -34,14 +34,15 @@ public class PlayerNetwork : NetworkBehaviour
         {
             input = new PlayerInput();
         }
-    }
 
+    }
     private void Start()
     {
         if (IsLocalPlayer)
         {
             input.Action.Shoot.performed += OnFireEvent;
         }
+        EnemyManager.Instance.GetPlayerTransform_ServerRpc(OwnerClientId);
     }
 
     private void OnEnable()
@@ -55,6 +56,7 @@ public class PlayerNetwork : NetworkBehaviour
         input.Disable();
     }
 
+    
 
     private void Update()
     {

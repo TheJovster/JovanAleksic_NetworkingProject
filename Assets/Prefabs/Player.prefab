@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4767757551382039877}
   - component: {fileID: 518330628695388358}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bullet_SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 1518882742402488386}
   - component: {fileID: 1165442028095564974}
   - component: {fileID: 4497970580058116846}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Visor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: -4449248233162264629}
   - component: {fileID: 1814997188834254791}
   - component: {fileID: 410039656209260404}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,10 +322,8 @@ MonoBehaviour:
     type: 3}
   projectileSpawnPoint: {fileID: 4767757551382039877}
   projectileSpanPointNT: {fileID: 518330628695388358}
-  moveInput:
-    m_InternalValue: {x: 0, y: 0}
-  mousePos:
-    m_InternalValue: {x: 0, y: 0}
+  currentHealth:
+    m_InternalValue: 10
 --- !u!114 &1814997188834254791
 MonoBehaviour:
   m_ObjectHideFlags: 0

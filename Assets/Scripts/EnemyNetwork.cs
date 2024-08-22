@@ -8,11 +8,15 @@ public class EnemyNetwork : NetworkBehaviour
     [field: SerializeField] private static int maxHealthValue = 1;
     [SerializeField] private static NetworkVariable<int> maxHealth = new NetworkVariable<int>(maxHealthValue, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
     [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(maxHealth.Value, NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Server);
-    private float distanceToPlayerOne;
-    private float distanceToPlayerTwo;
+
+
     private PlayerNetwork currentTarget;
 
+
     private Rigidbody rigidBody;
+
+    private float distanceToPlayerOne;
+    private float distanceToPlayerTwo;
 
     private void Awake()
     {
@@ -22,7 +26,7 @@ public class EnemyNetwork : NetworkBehaviour
 
     private void Start()
     {
-        FindPlayerIDs();
+
     }
 
     private void Update()
@@ -32,19 +36,26 @@ public class EnemyNetwork : NetworkBehaviour
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this.gameObject);
         }
+        if (EnemyManager.Instance != null && EnemyManager.Instance.players != null) 
+        {
+            transform.LookAt(new Vector3(EnemyManager.Instance.players[0].position.x, transform.position.y, EnemyManager.Instance.players[0].position.z));
+        }
     }
 
-    private void FindPlayerIDs() 
-    {
-        
-    }
+    
+
 
     private void FixedUpdate() 
     {
         //do the current target
-        Vector3 targetPos = currentTarget.transform.position - transform.position;
-        targetPos.Normalize();
-        rigidBody.velocity = targetPos * transform.forward.z * moveSpeed.Value;
+        if(EnemyManager.Instance != null && EnemyManager.Instance.players[0] != null) 
+        {
+            Vector3 targetPos = EnemyManager.Instance.players[0].position - transform.position;
+            targetPos.Normalize();
+            rigidBody.velocity = targetPos * transform.forward.z * moveSpeed.Value;
+        }
+
+
 
     }
 
@@ -54,10 +65,12 @@ public class EnemyNetwork : NetworkBehaviour
        //finish tomorrow
     }
 
-    private void OnCollisionEnter(Collision collision)
+   private void OnCollisionEnter(Collision collision)
     {
+
         if(collision.gameObject.tag == "Player") 
         {
+            Debug.Log("Colldiing with " + collision);
             collision.gameObject.GetComponent<PlayerNetwork>().OnTakeDamageEvent_ClientRpc();
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this);
@@ -77,4 +90,6 @@ public class EnemyNetwork : NetworkBehaviour
     {
         base.OnNetworkDespawn();
     }
+
+
 }
