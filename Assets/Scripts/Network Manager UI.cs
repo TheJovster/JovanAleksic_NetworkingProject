@@ -23,6 +23,7 @@ public class NetworkManagerUI : NetworkBehaviour
             NetworkManager.Singleton.StartHost();
             Instantiate(enemyManager).GetComponent<NetworkObject>().Spawn();
 
+
         });
         clientButton.onClick.AddListener(() => 
         {
