@@ -28,6 +28,8 @@ public class EnemyNetwork : NetworkBehaviour
 
     }
 
+    
+
     private void Update()
     {
         if(currentHealth.Value <= 0) 
@@ -47,7 +49,17 @@ public class EnemyNetwork : NetworkBehaviour
         }
     }
 
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Player") 
+        {
+            collision.gameObject.GetComponent<PlayerNetwork>().OnTakeDamageEvent_ClientRpc();
+            this.GetComponent<NetworkObject>().Despawn();
+            Destroy(this.gameObject);
+        }
+    }
+
+
     [ServerRpc]
     private void GoToNearestPlayer_ServerRpc() 
     {
