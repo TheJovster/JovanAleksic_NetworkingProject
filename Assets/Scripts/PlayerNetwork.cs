@@ -35,6 +35,8 @@ public class PlayerNetwork : NetworkBehaviour
             input = new PlayerInput();
         }
 
+
+
     }
     private void Start()
     {

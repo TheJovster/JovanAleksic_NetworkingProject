@@ -56,7 +56,7 @@ public class EnemyNetwork : NetworkBehaviour
         {
             Vector3 targetPos = EnemyManager.Instance.players[0].position - transform.position;
             targetPos.Normalize();
-            rigidBody.velocity = targetPos * transform.forward.z * moveSpeed.Value;
+            rigidBody.velocity = new Vector3(targetPos.x, transform.position.y, targetPos.z);
         }
     }
 

@@ -25,6 +25,8 @@ public class EnemyManager : NetworkBehaviour
         EnemieSpawnQueue_ServerRpc();
     }
 
+
+
     [ServerRpc]
     private void EnemieSpawnQueue_ServerRpc()
     {
@@ -32,14 +34,14 @@ public class EnemyManager : NetworkBehaviour
             SpawnEnemies_ServerRpc();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void GetPlayerTransform_ServerRpc(ulong clientNumber) 
     {
         players.Add(NetworkManager.Singleton.ConnectedClients[clientNumber].PlayerObject.transform);
         Debug.Log(NetworkManager.Singleton.ConnectedClients[clientNumber].PlayerObject.transform.position);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void SpawnEnemies_ServerRpc() 
     {
          Instantiate(enemyPrefab, spawnPoints[Random.Range(0, spawnPoints.Length)]).GetComponent<NetworkObject>().Spawn();

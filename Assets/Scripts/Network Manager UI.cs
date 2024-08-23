@@ -33,27 +33,37 @@ public class NetworkManagerUI : NetworkBehaviour
         });
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership=false)]
     public void InputText_ServerRpc()
     {
         if (Input.GetKeyDown(KeyCode.Return)) 
         {
             Debug.Log("Messsage Input");
-            SendMessage_ClientRpc(InputText.text);
+            SendMessage_ServerRpc(InputText.text);
         }
     }
 
-    [ClientRpc]
-    public void RecieveChatMessage_ClientRpc(string aMessage)
+    [ServerRpc]
+    public void RecieveChatMessage_ServerRpc(string aMessage)
     {
         //display aMessage on screen
         ChatText.text = aMessage;
     }
 
-    [ClientRpc]
-    public void SendMessage_ClientRpc(string messageToSend) 
+    [ServerRpc]
+    public void SendMessage_ServerRpc(string messageToSend) 
     {
         messageToSend = InputText.text;
-        RecieveChatMessage_ClientRpc(messageToSend);
+        RecieveChatMessage_ServerRpc(messageToSend);
+    }
+
+    [ClientRpc]
+    public void ConfirmChatMessage_ClientRpc()
+    {
+        string message = InputText.text;
+        if (string.IsNullOrEmpty(message))
+            return;
+
+        SendMessage_ServerRpc(message);
     }
 }
