@@ -516,6 +516,36 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &653105416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 345362794792230247, guid: d1be30525124a0642b8ca356e56da66b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5233672346353899445}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &653105418 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3230425942291536609, guid: d1be30525124a0642b8ca356e56da66b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5233672346353899445}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653105416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &701127425 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3853530476155388524, guid: d1be30525124a0642b8ca356e56da66b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5233672346353899445}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,6 +789,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1749512198264147647, guid: d1be30525124a0642b8ca356e56da66b,
         type: 3}
+      propertyPath: ChatText
+      value: 
+      objectReference: {fileID: 701127425}
+    - target: {fileID: 1749512198264147647, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
+      propertyPath: InputText
+      value: 
+      objectReference: {fileID: 653105418}
+    - target: {fileID: 1749512198264147647, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
       propertyPath: EnemyManager
       value: 
       objectReference: {fileID: 6268428578014122758, guid: 1baa9e10b1b1d714eb874d8af8ab71da,
@@ -773,6 +813,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.a
       value: 0.078431375
+      objectReference: {fileID: 0}
+    - target: {fileID: 3230425942291536609, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3230425942291536609, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3230425942291536609, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 653105416}
+    - target: {fileID: 3230425942291536609, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8104320531544918432, guid: d1be30525124a0642b8ca356e56da66b,
         type: 3}

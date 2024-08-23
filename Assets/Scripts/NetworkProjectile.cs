@@ -37,6 +37,10 @@ public class NetworkProjectile : NetworkBehaviour
             collision.gameObject.GetComponent<EnemyNetwork>().OnTakeDamageEvent_ServerRpc();
             Destroy(this.gameObject);
         }
+        else if(collision.gameObject.tag == "Player") 
+        {
+            Destroy(this.gameObject);
+        }
     }
 
 }

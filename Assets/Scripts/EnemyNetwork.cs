@@ -30,8 +30,14 @@ public class EnemyNetwork : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        EnemyManager.Instance.enemiesList.Add(this);
+        PopulateList_ServerRpc();
         base.OnNetworkSpawn();
+    }
+
+    [ServerRpc]
+    private void PopulateList_ServerRpc()
+    {
+        EnemyManager.Instance.enemiesList.Add(this);
     }
 
     private void Update()

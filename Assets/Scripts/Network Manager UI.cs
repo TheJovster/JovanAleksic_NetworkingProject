@@ -10,26 +10,37 @@ public class NetworkManagerUI : NetworkBehaviour
     [SerializeField] private Button clientButton;
     [SerializeField] private NetworkObject enemyManager;
     [SerializeField] private TextMeshProUGUI ChatText;
+    [SerializeField] private TMP_InputField InputText;
 
     private void Awake()
     {
-        servetButton.onClick.AddListener(() => 
+        servetButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartServer();
         });
 
-        hostButton.onClick.AddListener(() => 
+        hostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
             Instantiate(enemyManager).GetComponent<NetworkObject>().Spawn();
 
 
         });
-        clientButton.onClick.AddListener(() => 
+        clientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
-            //EnemyManager.Instance.GetPlayerTransform_ServerRpc(OwnerClientId);
+
         });
+    }
+
+    [ServerRpc]
+    public void InputText_ServerRpc()
+    {
+        if (Input.GetKeyDown(KeyCode.Return)) 
+        {
+            Debug.Log("Messsage Input");
+            SendMessage_ClientRpc(InputText.text);
+        }
     }
 
     [ClientRpc]
@@ -37,5 +48,12 @@ public class NetworkManagerUI : NetworkBehaviour
     {
         //display aMessage on screen
         ChatText.text = aMessage;
+    }
+
+    [ClientRpc]
+    public void SendMessage_ClientRpc(string messageToSend) 
+    {
+        messageToSend = InputText.text;
+        RecieveChatMessage_ClientRpc(messageToSend);
     }
 }
