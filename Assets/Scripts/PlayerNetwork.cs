@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 
@@ -18,6 +19,10 @@ public class PlayerNetwork : NetworkBehaviour
     public NetworkTransform projectileSpanPointNT;
     private Vector2 moveInput;
     private Vector2 mousePos;
+    public bool emoteEnabled;
+    public GameObject exclamationMark;
+    private float emoteLifeTime = 3f;
+    private float sinceEmoteActive;
 
     /// <summary>
     /// network variables go here. They are replicated and constant between the server/host and clients
@@ -29,13 +34,15 @@ public class PlayerNetwork : NetworkBehaviour
 
     private void Awake()
     {
+        emoteEnabled = false;
+        exclamationMark.SetActive(false);
         rigidBody = GetComponent<Rigidbody>();
         if (input == null)
         {
             input = new PlayerInput();
         }
 
-
+        sinceEmoteActive = float.PositiveInfinity;
 
     }
     private void Start()
@@ -43,6 +50,7 @@ public class PlayerNetwork : NetworkBehaviour
         if (IsLocalPlayer)
         {
             input.Action.Shoot.performed += OnFireEvent;
+            input.Action.Emote.performed += EmoteToggleEvent;
         }
         EnemyManager.Instance.GetPlayerTransform_ServerRpc(OwnerClientId);
     }
@@ -55,6 +63,7 @@ public class PlayerNetwork : NetworkBehaviour
     private void OnDisable()
     {
         input.Action.Shoot.performed -= OnFireEvent;
+        input.Action.Emote.performed -= EmoteToggleEvent;
         input.Disable();
     }
 
@@ -65,10 +74,30 @@ public class PlayerNetwork : NetworkBehaviour
         MoveInput();
         MouseInput();
 
-        if(currentHealth.Value<= 0) 
+        sinceEmoteActive += Time.deltaTime;
+
+        if (currentHealth.Value <= 0)
         {
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this);
+        }
+        if (sinceEmoteActive >= emoteLifeTime)
+        {
+            Chat.Instance.SendMessageToServerDisable_ServerRpc(this);
+        }
+        
+    }
+
+    private void EmoteToggleEvent(InputAction.CallbackContext context)
+    {
+        if (sinceEmoteActive >= emoteLifeTime)
+        {
+            emoteEnabled = true;
+            sinceEmoteActive = 0;
+            if (emoteEnabled)
+            {
+                Chat.Instance.SendMessageToServerEnable_ClientRpc(this);
+            }
         }
     }
 
@@ -103,10 +132,6 @@ public class PlayerNetwork : NetworkBehaviour
         }
     }
 
-    /// <summary>
-    /// I think this is how you do it?
-    /// come back if it doesn't
-    /// </summary>
 
     [ClientRpc]
     public void OnTakeDamageEvent_ClientRpc() 
@@ -118,9 +143,9 @@ public class PlayerNetwork : NetworkBehaviour
 
     public void OnFireEvent(InputAction.CallbackContext context)
     {
-        
         FireEvent_ServerRpc();
     }
+
     [ServerRpc]
     public void FireEvent_ServerRpc()
     {
@@ -134,6 +159,7 @@ public class PlayerNetwork : NetworkBehaviour
         moveInput = input.PlayerMovement.Movement.ReadValue<Vector2>();
     }
 
+
     public void MouseInput() 
     {
         mousePos = Input.mousePosition;
@@ -143,5 +169,18 @@ public class PlayerNetwork : NetworkBehaviour
     public void Disable_ServerRpc() 
     {
         base.OnNetworkDespawn();
+    }
+
+    [ClientRpc]
+    public void EnableExclamationMark_ClientRpc() 
+    {
+        exclamationMark.SetActive(true);
+        Debug.Log("Exclamation mark enabled");
+    }
+    [ClientRpc]
+    public void DisableExclamationMark_ClientRpc() 
+    {
+        exclamationMark.SetActive(false);
+        emoteEnabled = false;
     }
 }

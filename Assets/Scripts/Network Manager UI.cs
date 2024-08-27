@@ -5,31 +5,39 @@ using TMPro;
 
 public class NetworkManagerUI : NetworkBehaviour
 {
+    public static NetworkManagerUI Instance;
+
     [SerializeField] private Button servetButton;
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
     [SerializeField] private NetworkObject enemyManager;
+    [SerializeField] private NetworkObject Chat;
     [SerializeField] private TextMeshProUGUI ChatText;
     [SerializeField] private TMP_InputField InputText;
 
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != null)
+            Destroy(this);
+
         servetButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartServer();
+            Instantiate(enemyManager).GetComponent<NetworkObject>().Spawn();
+            Instantiate(Chat).GetComponent<NetworkObject>().Spawn();
         });
 
         hostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
             Instantiate(enemyManager).GetComponent<NetworkObject>().Spawn();
-
-
+            Instantiate(Chat).GetComponent<NetworkObject>().Spawn();
         });
         clientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
-
         });
     }
 
@@ -58,12 +66,17 @@ public class NetworkManagerUI : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void ConfirmChatMessage_ClientRpc()
+    public void ConfirmChatMessage_ClientRpc(string aMessage)
     {
-        string message = InputText.text;
-        if (string.IsNullOrEmpty(message))
-            return;
+        if (Input.GetKeyDown(KeyCode.Return)) 
+        {
+            InputText.text = aMessage;
+            if (string.IsNullOrEmpty(aMessage))
+                return;
 
-        SendMessage_ServerRpc(message);
+            SendMessage_ServerRpc(aMessage);
+            InputText.text = null;
+            Debug.Log("Input text " + aMessage);
+        }
     }
 }

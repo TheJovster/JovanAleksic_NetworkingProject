@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
+
 public class EnemyNetwork : NetworkBehaviour
 {
 
@@ -34,7 +35,7 @@ public class EnemyNetwork : NetworkBehaviour
         base.OnNetworkSpawn();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership =false)]
     private void PopulateList_ServerRpc()
     {
         EnemyManager.Instance.enemiesList.Add(this);
@@ -47,16 +48,20 @@ public class EnemyNetwork : NetworkBehaviour
             EnemyManager.Instance.enemiesList.Remove(this);
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this.gameObject);
+            if(EnemyManager.Instance.enemiesList.Count <= 0) 
+            {
+                EnemyManager.Instance.StartNewWave_ServerRpc();
+            }
         }
         if (EnemyManager.Instance != null && EnemyManager.Instance.players != null) 
         {
-            transform.LookAt(new Vector3(EnemyManager.Instance.players[0].position.x, transform.position.y, EnemyManager.Instance.players[0].position.z));
+            //transform.LookAt(new Vector3(EnemyManager.Instance.players[0].position.x, transform.position.y, EnemyManager.Instance.players[0].position.z));
         }
         if (EnemyManager.Instance != null)
         {
-            Vector3 targetPos = EnemyManager.Instance.players[0].position - transform.position;
-            targetPos.Normalize();
-            rigidBody.velocity = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+            //Vector3 targetPos = EnemyManager.Instance.players[0].position - transform.position;
+            //targetPos.Normalize();
+            //rigidBody.velocity = new Vector3(targetPos.x, transform.position.y, targetPos.z);
         }
     }
 
@@ -65,6 +70,7 @@ public class EnemyNetwork : NetworkBehaviour
         if(collision.gameObject.tag == "Player") 
         {
             collision.gameObject.GetComponent<PlayerNetwork>().OnTakeDamageEvent_ClientRpc();
+            EnemyManager.Instance.enemiesList.Remove(this);
             this.GetComponent<NetworkObject>().Despawn();
             Destroy(this.gameObject);
         }
@@ -82,7 +88,6 @@ public class EnemyNetwork : NetworkBehaviour
     {
 
         currentHealth.Value--;
-        Debug.Log("HealthDecremented.");
     }
 
     [ServerRpc]

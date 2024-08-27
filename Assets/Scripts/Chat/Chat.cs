@@ -17,16 +17,18 @@ public class Chat : MonoBehaviour
             Destroy(Instance);
     }
 
-
     [ServerRpc]
-    public void SendChatMessageServerRpc(string aMessagem, ulong senderID)
+    public void SendMessageToServerEnable_ClientRpc(PlayerNetwork sender) 
     {
-        // do the thing
-
-        //RecieveChatMessage_ClientRpc(aMessage);
+        sender.EnableExclamationMark_ClientRpc();
     }
 
-
+    [ServerRpc]
+    public void SendMessageToServerDisable_ServerRpc(PlayerNetwork sender) 
+    {
+        sender.DisableExclamationMark_ClientRpc();
+    }
+    
     //inside of the ui, not the chat script
 
 

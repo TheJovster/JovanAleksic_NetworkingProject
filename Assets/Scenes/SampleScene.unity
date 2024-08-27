@@ -795,6 +795,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1749512198264147647, guid: d1be30525124a0642b8ca356e56da66b,
         type: 3}
+      propertyPath: Chat
+      value: 
+      objectReference: {fileID: -7359043582321199109, guid: 320e64274fa5e2448b51a6aa9cffe9b8,
+        type: 3}
+    - target: {fileID: 1749512198264147647, guid: d1be30525124a0642b8ca356e56da66b,
+        type: 3}
       propertyPath: ChatText
       value: 
       objectReference: {fileID: 701127425}
